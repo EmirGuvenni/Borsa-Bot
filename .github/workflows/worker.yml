@@ -1,0 +1,19 @@
+name: Prod
+
+on: pull_request
+
+jobs:
+  Prod:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔧 Building the package...
+        uses: actions/checkout@v2
+
+        run: npm run build
+
+      - name: 👀 Setting the PM2...
+        uses: actions/checkout@v2
+
+        run: npm run pm2
