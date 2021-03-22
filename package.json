@@ -1,0 +1,22 @@
+{
+  "name": "discord_borsa_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node .",
+    "build": "tsc --project ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/ws": "^7.4.0",
+    "axios": "^0.21.1",
+    "discord.js-light": "^3.5.4"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^14.14.35"
+  }
+}
