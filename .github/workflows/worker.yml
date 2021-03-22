@@ -8,12 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: 📦 Setting up TypeScript and pm2...
+        uses: actions/checkout@v2
+
+        run: npm i -g typescript pm2
+
       - name: 🔧 Building the package...
         uses: actions/checkout@v2
 
         run: npm run build
 
-      - name: 👀 Setting the PM2...
+      - name: 👀 Setting the pm2...
         uses: actions/checkout@v2
 
         run: npm run pm2
