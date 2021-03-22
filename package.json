@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node .",
-    "build": "tsc --project ."
+    "build": "tsc --project .",
+    "pm2": "pm2 start dist/index.js"
   },
   "keywords": [],
   "author": "",
