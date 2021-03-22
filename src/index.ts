@@ -12,8 +12,8 @@ client.on('ready', async () => {
 	setInterval(async () => {
 		let rates = await getRates();
 
-		setTimeout(async () => await setUSD(rates.usd), 8000);
 		await setEUR(rates.eur);
+		setTimeout(async () => await setUSD(rates.usd), 8000);
 
 		_++;
 	}, 16000);
