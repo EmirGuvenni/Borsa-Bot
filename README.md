@@ -7,6 +7,8 @@ A bot that shows exchange rate from TRY to USD and EUR
 
 [Free Forex API](https://www.freeforexapi.com/) - Used for currency rates.
 
+[Messari.io](https://messari.io/api) - Used for Crypto currency rates.
+
 ## Installation
 use `npm run build` to build the TypeScript source code (requires TypeScript) and use `npm start` to start the bot.
 Optionally, you could use the `npm run pm2` to run it in pm2 (requires pm2).
