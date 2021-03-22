@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Client } from "discord.js-light";
+import { Client, MessageEmbed } from "discord.js-light";
 import config from "./config.json";
 
 const client = new Client();
@@ -21,16 +21,24 @@ client.on('ready', async () => {
 
 client.on('message', async (message) => {
 	if (message.content == '!borsa') {
+		await message.channel.send('Retrieving exchange rates...');
+
 		let rates = await getRates();
 		let crypto = await getCrypto();
 
-		await message.channel.send([
-			`Dolar: ${rates.usd}₺`,
-			`Euro: ${rates.eur}₺`,
-			`BTC: ${crypto.btc}$`,
-			`BAT: ${crypto.bat}$`,
-			`ETH: ${crypto.eth}$`
-		]);
+
+
+		await message.channel.send(new MessageEmbed().setTitle('Exchange rates')
+			.setDescription(
+				[
+					`**Dolar**: ${rates.usd}₺`,
+					`**Euro**: ${rates.eur}₺`,
+					`**BTC**: ${crypto.btc}$`,
+					`**BAT**: ${crypto.bat}$`,
+					`**ETH**: ${crypto.eth}$`
+				]
+			).setColor(0x228D57)
+		);
 	}
 })
 
@@ -44,14 +52,14 @@ async function getCrypto() {
 	const bat: string = batReq.data.data.market_data.price_usd;
 	const eth: string = ethReq.data.data.market_data.price_usd;
 
-	const btcDollar = btc.split('.')[0];
-	const batDollar = bat.split('.')[0];
-	const ethDollar = eth.split('.')[0];
+	const btcDollar = String(btc).split('.')[0];
+	const batDollar = String(bat).split('.')[0];
+	const ethDollar = String(eth).split('.')[0];
 
 
-	const btcCents = btc.split('.')[1].substring(0, 2);
-	const batCents = bat.split('.')[1].substring(0, 2);
-	const ethCents = eth.split('.')[1].substring(0, 2);
+	const btcCents = String(btc).split('.')[1].substring(0, 2);
+	const batCents = String(bat).split('.')[1].substring(0, 2);
+	const ethCents = String(eth).split('.')[1].substring(0, 2);
 
 	return {
 		btc: `${btcDollar}.${btcCents}`,
