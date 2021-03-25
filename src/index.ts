@@ -89,7 +89,7 @@ async function getCrypto() {
 		}
 	}
 	catch (err) {
-		fs.writeFileSync(`./log - ${getDate()}`, err.stack);
+		fs.writeFileSync(`./logs/log - ${getDate()}`, err.stack);
 		return 'error';
 	}
 }
@@ -113,7 +113,7 @@ async function getRates() {
 		return { usd, eur };
 	}
 	catch (err) {
-		fs.writeFileSync(`./log - ${getDate()}`, err.stack);
+		fs.writeFileSync(`./logs/log - ${getDate()}`, err.stack);
 		return 'error';
 	}
 }
