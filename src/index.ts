@@ -37,11 +37,11 @@ client.on('message', async (message) => {
 			return;
 		}
 		else if (ratesFailed) {
-			await message.channel.send('Failed to retrieve crypto currency rates.');
+			await message.channel.send('Failed to retrieve foreign currency rates.');
 			return;
 		}
 		else if (cryptoFailed) {
-			await message.channel.send('Failed to retrieve foreign currency rates.');
+			await message.channel.send('Failed to retrieve crypto currency rates.');
 			return;
 		}
 
