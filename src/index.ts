@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Client, MessageEmbed } from "discord.js-light";
 import fs from "fs";
-import config from "./config.json";
 
 const client = new Client();
 
@@ -62,7 +61,7 @@ client.on('message', async (message) => {
 	}
 })
 
-client.login(config.token);
+client.login(process.env.TOKEN);
 async function getCrypto() {
 	try {
 		const btcReq = await axios.get('https://data.messari.io/api/v1/assets/btc/metrics/market-data');
