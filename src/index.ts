@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Client, MessageEmbed } from "discord.js-light";
 import fs from "fs";
-import config from "./config.json";
 
 const client = new Client();
 
@@ -13,9 +12,9 @@ client.on('ready', async () => {
 	setInterval(async () => {
 		let rates = await getRates();
 
-		if (typeof rates != 'string') {
+		if (rates) {
 			await setEUR(rates.eur);
-			setTimeout(async () => typeof rates != 'string' ? await setUSD(rates.usd) : '', 8000);
+			setTimeout(async () => rates ? await setUSD(rates.usd) : '', 8000);
 
 			_++;
 		}
@@ -32,37 +31,38 @@ client.on('message', async (message) => {
 		const ratesFailed = typeof rates == 'string';
 		const cryptoFailed = typeof crypto == 'string';
 
+		let usd: string = rates?.usd || 'ERROR';
+		let eur: string = rates?.eur || 'ERROR';
+		let btc: string = crypto?.btc || 'ERROR';
+		let bat: string = crypto?.bat || 'ERROR';
+		let eth: string = crypto?.eth || 'ERROR';
+
 		if (ratesFailed && cryptoFailed) {
 			await message.channel.send('Failed to retrieve both foreign currency and crypto currency rates.');
 			return;
 		}
-		else if (ratesFailed) {
+		else if (ratesFailed)
 			await message.channel.send('Failed to retrieve foreign currency rates.');
-			return;
-		}
-		else if (cryptoFailed) {
-			await message.channel.send('Failed to retrieve crypto currency rates.');
-			return;
-		}
 
-		// Did this if check to satisfy TypeScript
-		// shouldn't have done that
-		if (typeof rates != 'string' && typeof crypto != 'string')
-			await message.channel.send(new MessageEmbed().setTitle('Exchange rates')
-				.setDescription(
-					[
-						`**Dolar**: ${rates.usd}₺`,
-						`**Euro**: ${rates.eur}₺`,
-						`**BTC**: ${crypto.btc}$`,
-						`**BAT**: ${crypto.bat}$`,
-						`**ETH**: ${crypto.eth}$`
-					]
-				).setColor(0x228D57)
-			);
+		else if (cryptoFailed)
+			await message.channel.send('Failed to retrieve crypto currency rates.');
+
+		await message.channel.send(new MessageEmbed().setTitle('Exchange rates')
+			.setDescription(
+				[
+					`**Dolar**: ${usd}₺`,
+					`**Euro**: ${eur}₺`,
+					`**BTC**: ${btc}$`,
+					`**BAT**: ${bat}$`,
+					`**ETH**: ${eth}$`
+				]
+			).setColor(0x228D57)
+		);
 	}
 })
 
-client.login(config.token);
+client.login(process.env.TOKEN);
+
 async function getCrypto() {
 	try {
 		const btcReq = await axios.get('https://data.messari.io/api/v1/assets/btc/metrics/market-data');
@@ -90,7 +90,7 @@ async function getCrypto() {
 	}
 	catch (err) {
 		fs.writeFileSync(`./logs/log - ${getDate()}`, err.stack);
-		return 'error';
+		return null;
 	}
 }
 async function getRates() {
@@ -114,7 +114,7 @@ async function getRates() {
 	}
 	catch (err) {
 		fs.writeFileSync(`./logs/log - ${getDate()}`, err.stack);
-		return 'error';
+		return null;
 	}
 }
 async function setUSD(usd: string): Promise<void> {
