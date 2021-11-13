@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Client, MessageEmbed } from "discord.js-light";
+import { Client, Message, MessageEmbed } from "discord.js-light";
 import fs from "fs";
 
 const client = new Client();
@@ -22,6 +22,8 @@ client.on('ready', async () => {
 })
 
 client.on('message', async (message) => {
+	await filterTiktokLinks(message);
+
 	if (message.content == '!borsa') {
 		await message.channel.send('Retrieving exchange rates...');
 
@@ -60,6 +62,8 @@ client.on('message', async (message) => {
 		);
 	}
 })
+
+client.on('messageUpdate', async (a, newMessage) => await filterTiktokLinks(newMessage as Message));
 
 client.login(process.env.TOKEN);
 
@@ -135,4 +139,28 @@ function getDate(): string {
 	const minute: number = date.getMinutes();
 
 	return `${day}.${month}.${year} - ${hour}:${minute}`;
+}
+
+async function filterTiktokLinks(message: Message): Promise<void> {
+	if (message.channel.id === '850701388359139328') return;
+
+	let args: string[] = message.content.split(' ');
+
+	let isTiktok: boolean = message.content.includes('http') && message.content.includes('tiktok');
+	let isMusically: boolean = message.content.includes('http') && message.content.includes('musical');
+
+	if (isTiktok || isMusically) message.delete();
+
+	// look at each string and delete the message 
+	// if there's a link and it redirects to tiktok
+	for (let arg of args) {
+		if (arg.startsWith('http') && arg.includes('.') && arg.includes('://')) {
+			await axios.get(arg).then((response) => {
+				let url: string = response.request.res.responseUrl;
+
+				if (url.includes('tiktok') || url.includes('musical'))
+					message.delete();
+			});
+		}
+	}
 }
